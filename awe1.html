@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Awe JS app</title>
+	</head>
+	<body>
+        <div id="container"></div>
+        <script src="awe.js-master/js/awe-loader.js"></script>
+        <script>
+            window.addEventListener('load', function() {
+                window.awe.init({
+                    device_type:  awe.AUTO_DETECT_DEVICE_TYPE,
+                    settings: {
+                        container_id: 'container',
+                        fps: 30,
+                        default_camera_position: {x: 0, y: 0, x: 0},
+                        default_lights: [
+                            {
+                                id: 'point_light',
+                                type: 'point',
+                                color: 0xFFFFFF
+                            }
+                        ]
+                    },
+                    ready: function(){
+                        awe.util.require([
+                            {
+                                capabilities: ['gum', 'webgl'],
+                                files: [
+                                    ['awe.js-master/js/awe-standard-dependencies.js', 'awe.js-master/js/awe-standard.js'],
+                                    'awe.js-master/js/awe-standard-object_clicked.js',
+                                    'awe.js-master/js/awe-jsartoolkit-dependencies.js',
+                                    'awe.js-master/js/awe.marker_ar.js'
+                                ],
+                                success: function() {
+                                    window.awe.setup_scene();
+
+                                    awe.pois.add({
+                                        id: 'marker',
+                                        position: {x: 0, y: 0, z: 10000},
+                                        visibility: false
+                                    });
+
+                                    awe.projections.add({
+                                        id: 'model',
+                                        geometry: {
+                                            path: 'model/steyerdorf.obj',
+                                            position: { x: 0, y: 0, z:0},
+                                            scale: { x: 50, y: 50, z: 50}
+                                        }
+                                    }, {
+                                        poi_id: 'marker'
+                                    });
+
+                                    awe.events.add([
+                                        {
+                                            id: 'ar_tracking_marker',
+                                            device_types: {
+                                                pc: 1,
+                                                android: 1
+                                            },
+                                            register: function(handler) {
+                                                window.addEventListener('ar_tracking_marker', handler, false);
+                                            },
+                                            unregister: function(handler) {
+                                                window.removeEventListener('ar_tracking_marker', handler, false);
+                                            },
+                                            handler: function(event) {
+                                                if(event.detail) {
+                                                    if(event.detail['64']) {
+                                                        awe.pois.update({
+                                                            data: {
+                                                                visible: true,
+                                                                position: {x:0, y: 0, z: 0},
+                                                                matrix: event.detail[64].transform
+                                                            },
+                                                            where: {
+                                                                id: 'marker'
+                                                            }
+                                                        });
+                                                        awe.projections.update({
+                                                            data: {
+                                                                position: {
+                                                                    x: 0, y: 0, z:0
+                                                                }
+                                                            },
+                                                            where: {
+                                                                id: 'model'
+                                                            }
+                                                        });
+                                                    } else {
+                                                        awe.pois.update({
+                                                            data: {
+                                                                visible: false,
+                                                            },
+                                                            where: {
+                                                                id: 'marker'
+                                                            }
+                                                        });
+                                                        awe.projections.update({
+                                                            data: {
+                                                                position: {
+                                                                    y: -1000000
+                                                                }
+                                                            },
+                                                            where: {
+                                                                id: 'model'
+                                                            }
+                                                        })
+                                                    }
+                                                    awe.scene_needs_rendering = true;
+                                                }
+                                            } // handler
+                                        }
+                                    ]);
+                                } //success
+                            },
+                            {
+                                capabilities: [],
+                                success: function() {
+                                    document.body.innerHTML = '<p> Try this in latest version chrome or firefox on a PC</p>'
+                                }
+                            }
+                            
+                        ]); // awe.util.require
+
+                    } // ready
+                }); // window awe init
+            }); // load
+        </script>
+    </body>
+</html>

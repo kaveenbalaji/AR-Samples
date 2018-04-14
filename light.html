@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Three JS</title>
+</head>
+
+<body>
+    <canvas id="Canvas"></canvas>
+    <script src="three.js/three.js"></script>
+    <script>
+        var renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('Canvas'), antialias: true });
+        renderer.setClearColor(0x3333333);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        //perspective camera
+        var camera = new THREE.PerspectiveCamera(35, window.innerWidth/window.innerHeight, 0.1, 20000);
+        camera.position.z = 500;
+
+        //var camera = new THREE.OrthographicCamera(-300, 300, 200, -200, 0.1, 2000);
+        var scene = new THREE.Scene();
+
+        // var secondCamera = new THREE.PerspectiveCamera(35, window.innerWidth/window.innerHeight, 0.1, 20000);
+        // var cameraHelper = new THREE.CameraHelper(secondCamera);
+        // scene.add(cameraHelper);
+
+        //orthographic camera
+
+        var coneGeometry = new THREE.CylinderGeometry(100, 200, 100, 500);
+        var coneMaterial = new THREE.MeshLambertMaterial();
+        var coneMesh = new THREE.Mesh(coneGeometry, coneMaterial);
+        coneMesh.position.set(-150, -50, -500);
+        coneMesh.rotation.x = -100;
+        scene.add(coneMesh);
+
+        var cubeGeometry = new THREE.CubeGeometry(90,100,90,200);
+        var cubeMaterial = new THREE.MeshLambertMaterial();
+        var cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial);
+        cubeMesh.position.set(200, -50, -500);
+        cubeMesh.rotation.x = -100;
+        scene.add(cubeMesh);
+
+        var planeGeometry = new THREE.PlaneGeometry(900, 500, 300, 900);
+        var planeMaterial = new THREE.MeshPhongMaterial({color: 0x3333333});
+        var planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+        planeMesh.position.set(50, -70, -500);
+        planeMesh.rotation.set(-290, 0, 0);
+        scene.add(planeMesh);
+
+        //AMBIENT LIGHT
+        // var lightOne = new THREE.AmbientLight(0xFFFF, 0.5);
+        // lightOne.position.z = 300;
+        // scene.add(lightOne);
+
+        //POINT LIGHT
+        // var lightOne = new THREE.PointLight(0xFFFF, 0.5);
+        // scene.add(lightOne);
+
+        // var lightHelper = new THREE.PointLightHelper(lightOne);
+        // scene.add(lightHelper);
+
+        // DIRECTIONAL LIGHT
+        // var lightOne = new THREE.DirectionalLight(0xFFFF, 0.5, 1000);
+        // lightOne.target = coneMesh;
+        // scene.add(lightOne);
+
+        // var lightHelper = new THREE.DirectionalLightHelper(lightOne);
+        // scene.add(lightHelper);
+        //SPOT LIGHT
+        // var lightOne = new THREE.SpotLight(0xFFFF, 0.5, 1000);
+        // lightOne.target = coneMesh;
+        // scene.add(lightOne);
+
+        //HEMISPHERE LIGHT
+        var lightOne = new THREE.HemisphereLight(0xFFFF, 0x0808dd, 1);
+        scene.add(lightOne);
+
+        //SHADOW CASTING
+        /* renderer.shadowMap.enable = true;
+        renderer.shadowMap.type = THREE.PCFShadowMap;
+
+        var lightOne = new THREE.SpotLight(0xFFFF, 2.0, 3000);
+        lightOne.position.x = 50;
+        lightOne.target = coneMesh;
+
+        lightOne.castShadow = true;
+        lightOne.shadow = new THREE.LightShadow(new THREE.PerspectiveCamera(100,1, 500, 1000));
+        lightOne.shadow.bias = 0.0001;
+        lightOne.shadow.mapSize.width = 2048 * 2;
+        lightOne.shadow.mapSize.height = 2048 * 2;
+
+        scene.add(lightOne);
+
+        coneMesh.castShadow = true;
+        cubeMesh.castShadow = true;
+        planeMesh.receiveShadow = true; */
+
+        requestAnimationFrame(render);
+        var delta = 0;
+        function render() {
+            //lightHelper.update();
+            delta += 0.01;
+            camera.lookAt(lightOne.position);
+            camera.position.x = Math.sin(delta) * 2000;
+            camera.position.z = Math.cos(delta) * 2000;
+            renderer.render(scene,camera);
+            requestAnimationFrame(render);
+        }
+    </script>
+</body>
+
+</html>

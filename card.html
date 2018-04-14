@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<script src="AR.js/aframe/examples/vendor/aframe/build/aframe.min.js"> </script>
+<script src="AR.js/aframe/build/aframe-ar.js"> </script>
+<a-scene embedded arjs='trackingMethod: best;'>
+    <a-anchor hit-testing-enabled='true'>
+       <a-entity  position="2.5 0 -0.5" scale="0.01 0.010 0.010" 
+       obj-model="obj: url(model/steyerdorf.obj);" >
+      </a-entity>
+
+        <a-sphere position="2 2 -0.5" color="white" radius="0.15" >
+            <a-animation attribute="color" dur="10000" from="white" to="green" repeat="indefinite">
+            </a-animation>
+        </a-sphere>
+        <a-sphere position="1.5 2 -0.5" color="white" radius="0.15" >
+            <a-animation attribute="color" dur="10000" from="white" to="blue" repeat="indefinite">
+            </a-animation>
+        </a-sphere>
+        <a-sphere position="2.5 2 -0.5" color="white" radius="0.15" >
+            <a-animation attribute="color" dur="10000" from="white" to="red" repeat="indefinite">
+            </a-animation>
+        </a-sphere>
+        <a-plane src="https://raw.githubusercontent.com/aframevr/sample-assets/master/assets/images/wood/hardwood2_diffuse.jpg" width="3" height="3" color="grey" position="-2 1 0">
+        </a-plane>
+        <a-text value="\n\n Kaveen Jagadeesan -Javascript developer \n\n@kaveenbalaji \n\n j.kb@gmail.com"
+            position="-3.5 2 0" height="3" width="3" color="white"></a-text>
+        <a-image src="model/IMG_1339.JPG" width="1" height="1.5" position="-1 0.5 0"></a-image>
+   </a-anchor>
+   <a-camera-static />
+</a-scene>
+</html>
